@@ -3,7 +3,6 @@ package com.oracle.blackjack.gamemodel;
 import com.oracle.blackjack.gamemodel.deck.Card;
 import com.oracle.blackjack.gamemodel.deck.CardIdentifier;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**

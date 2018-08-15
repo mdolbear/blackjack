@@ -2,7 +2,6 @@ package com.oracle.blackjack;
 
 import com.oracle.blackjack.gamemodel.BlackJackGame;
 import com.oracle.blackjack.gamemodel.GameState;
-import com.oracle.blackjack.gamemodel.Player;
 import com.oracle.blackjack.gamemodel.PlayerState;
 
 import java.io.Serializable;
@@ -17,6 +16,7 @@ public class BlackJackGameState implements Serializable {
     private GameState gameState;
     private List<String> playerIds;
     private List<PlayerState> playerStates;
+    private List<Integer> playerPoints;
 
     /**
      * Answer a default instance
@@ -38,6 +38,7 @@ public class BlackJackGameState implements Serializable {
         this.setGameState(aGame.getState());
         this.setPlayerStates(aGame.getPlayerStates());
         this.setPlayerIds(aGame.getPlayerIds());
+        this.setPlayerPoints(aGame.getPlayerPoints());
     }
 
 
@@ -113,5 +114,22 @@ public class BlackJackGameState implements Serializable {
         this.playerStates = playerStates;
     }
 
+    /**
+     * Answer my playerPoints
+     *
+     * @return java.util.List<java.lang.Integer>
+     */
+    public List<Integer> getPlayerPoints() {
+        return playerPoints;
+    }
+
+    /**
+     * Set my playerPoints
+     *
+     * @param playerPoints java.util.List<java.lang.Integer>
+     */
+    public void setPlayerPoints(List<Integer> playerPoints) {
+        this.playerPoints = playerPoints;
+    }
 
 }

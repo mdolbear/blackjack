@@ -8,7 +8,7 @@ import java.util.Iterator;
 /**
  *
  */
-//@Document(collection="gameCollection")
+@Document(collection="gameCollection")
 public class BlackJackGameEvaluator {
 
 

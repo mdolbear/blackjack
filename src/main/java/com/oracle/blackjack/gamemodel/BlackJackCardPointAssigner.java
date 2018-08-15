@@ -12,7 +12,7 @@ import java.util.List;
 /**
  *
  */
-//@Document(collection="gameCollection")
+@Document(collection="gameCollection")
 public class BlackJackCardPointAssigner {
 
 

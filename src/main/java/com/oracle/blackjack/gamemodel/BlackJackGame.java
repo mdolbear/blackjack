@@ -368,4 +368,26 @@ public class BlackJackGame implements Serializable {
     }
 
 
+    /**
+     * Answer my player points
+     * @return List<Integer>
+     */
+    public List<Integer> getPlayerPoints() {
+
+        return this.getPlayers().stream()
+                .map(this.getPlayerToPlayerPointsMappingFunction())
+                .collect(Collectors.toList());
+    }
+
+
+    /**
+     * Answer my player to player id mapping function
+     * @return Function<Player, Integer>
+     */
+    protected Function<Player, Integer> getPlayerToPlayerPointsMappingFunction() {
+        return (Player p) -> new Integer(p.getCurrentHandPoints());
+    }
+
+
+
 }
