@@ -44,7 +44,8 @@ public class BlackJackGameExceptionTranslator extends ResponseEntityExceptionHan
      */
     @ExceptionHandler(value = {IllegalStateException.class,
                                IllegalArgumentException.class,
-                               NoSuchElementException.class})
+                               CardDeckNotFoundException.class,
+                               GameNotFoundException.class})
     public ResponseEntity<Object> handleConflict(RuntimeException anException,
                                                  WebRequest aRequest) {
 
@@ -54,10 +55,10 @@ public class BlackJackGameExceptionTranslator extends ResponseEntityExceptionHan
         getLogger().error(tempMsg);
 
         return this.handleExceptionInternal(anException,
-                new ErrorMessage(HttpStatus.CONFLICT, tempMsg),
-                new HttpHeaders(),
-                HttpStatus.CONFLICT,
-                aRequest);
+                                            new ErrorMessage(HttpStatus.CONFLICT, tempMsg),
+                                            new HttpHeaders(),
+                                            HttpStatus.CONFLICT,
+                                            aRequest);
 
     }
 

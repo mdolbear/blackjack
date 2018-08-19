@@ -1,5 +1,7 @@
 package com.oracle.blackjack.persistence;
 
+import com.oracle.blackjack.exceptions.CardDeckNotFoundException;
+import com.oracle.blackjack.exceptions.GameNotFoundException;
 import com.oracle.blackjack.gamemodel.BlackJackGame;
 import com.oracle.blackjack.gamemodel.PlayerState;
 import com.oracle.blackjack.gamemodel.deck.CardDeck;
@@ -7,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  *
@@ -87,8 +91,28 @@ public class BlackJackServiceFacadeImpl implements BlackJackServiceFacade {
 
         BlackJackGame       tempGame;
 
-        tempGame = this.getRepository().findById(aGameId).get();
+        tempGame = this.safelyGetGame(aGameId,
+                                      this.getRepository().findById(aGameId));
         return tempGame;
+
+    }
+
+    /**
+     * Answer my card deck or throw a not found exception
+     * @param anOptional
+     * @return
+     */
+    protected BlackJackGame safelyGetGame(String anId,
+                                          Optional<BlackJackGame> anOptional)
+            throws GameNotFoundException {
+
+        try {
+            return anOptional.get();
+        }
+        catch (NoSuchElementException e) {
+
+            throw new GameNotFoundException("Card deck not found for id: " + anId);
+        }
 
     }
 

@@ -1,9 +1,11 @@
 package com.oracle.blackjack.persistence;
 
+import com.oracle.blackjack.exceptions.CardDeckNotFoundException;
 import com.oracle.blackjack.gamemodel.deck.CardDeck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -63,7 +65,27 @@ public class CardDeckServiceFacadeImpl implements CardDeckServiceFacade {
         Optional<CardDeck> tempOptional;
 
         tempOptional = this.getRepository().findById(anId);
-        return tempOptional.get();
+        return this.safelyGetCardDeck(anId,
+                                      tempOptional);
+
+    }
+
+    /**
+     * Answer my card deck or throw a not found exception
+     * @param anOptional
+     * @return
+     */
+    protected CardDeck safelyGetCardDeck(String anId,
+                                         Optional<CardDeck> anOptional)
+                        throws CardDeckNotFoundException {
+
+        try {
+            return anOptional.get();
+        }
+        catch (NoSuchElementException e) {
+
+            throw new CardDeckNotFoundException("Card deck not found for id: " + anId);
+        }
 
     }
 
