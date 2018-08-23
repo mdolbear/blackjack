@@ -20,11 +20,21 @@ public class BlackJackGameState implements Serializable {
 
     /**
      * Answer a default instance
+     */
+    public BlackJackGameState() {
+
+        super();
+
+    }
+
+
+    /**
+     * Answer a default instance
      * @param aGame BlackJackGame
      */
     public BlackJackGameState(BlackJackGame aGame) {
 
-        super();
+        this();
         this.initializeMeFrom(aGame);
     }
 
@@ -130,6 +140,50 @@ public class BlackJackGameState implements Serializable {
      */
     public void setPlayerPoints(List<Integer> playerPoints) {
         this.playerPoints = playerPoints;
+    }
+
+    /**
+     * Answer whether or not game is terminated
+     * @return boolean
+     */
+    public boolean isGameTerminated() {
+
+        return this.getGameState() != null &&
+                this.getGameState().equals(GameState.TERMINATED);
+    }
+
+    /**
+     * Answer my string representation
+     * @return String
+     */
+    @Override
+    public String toString() {
+
+        StringBuilder   tempBuilder = new StringBuilder();
+
+        tempBuilder.append("GameId: ");
+        tempBuilder.append((this.getGameId() != null) ? this.getGameId() : "null ");
+        tempBuilder.append(System.getProperty("line.separator"));
+
+        tempBuilder.append("GameState: " );
+        tempBuilder.append((this.getGameState() != null) ? this.getGameState().toString() : " null");
+        tempBuilder.append(System.getProperty("line.separator"));
+
+        tempBuilder.append("playerIds: ");
+        tempBuilder.append(this.getPlayerIds().toString());
+        tempBuilder.append(System.getProperty("line.separator"));
+
+        tempBuilder.append("playerStates: ");
+        tempBuilder.append(this.getPlayerStates().toString());
+        tempBuilder.append(System.getProperty("line.separator"));
+
+        tempBuilder.append("playerPoints: ");
+        tempBuilder.append(this.getPlayerPoints().toString());
+        tempBuilder.append(System.getProperty("line.separator"));
+
+
+        return tempBuilder.toString();
+
     }
 
 }
