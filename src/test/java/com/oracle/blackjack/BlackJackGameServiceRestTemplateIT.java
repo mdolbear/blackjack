@@ -18,7 +18,7 @@ import static junit.framework.TestCase.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = BlackJackApplication.class,
                 webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BlackJaGameServiceRestTemplateTest {
+public class BlackJackGameServiceRestTemplateIT {
 
     @LocalServerPort
     private int port;
