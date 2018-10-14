@@ -12,7 +12,7 @@ mvn clean install -Pbuild-docker-image
 To pull docker down to your local Docker:
 
 ```docker pull mongo```
-``docker run -p 27017:27017 mongo```
+```docker run -p 27017:27017 mongo```
 
 
 #This configuration supports a kubernetes cluster. Do the following to load the kubernetes cluster:
