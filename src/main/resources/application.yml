@@ -1,0 +1,26 @@
+logging:
+  level:
+    org.springframework: ERROR
+    com.oracle: DEBUG
+
+app:
+  applicationName: BlackJack
+  applicationDescription: ${app.applicationName} is a Spring Boot application
+
+spring:
+  profiles:
+    active: "dev"
+
+---
+
+spring:
+  profiles: dev
+  data:
+    mongodb.uri: mongodb://localhost:27017/db
+
+---
+spring:
+  profiles: prod
+  data:
+    mongodb.uri: mongodb://mongo:27017/db
+
