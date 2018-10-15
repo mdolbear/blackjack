@@ -111,7 +111,7 @@ public class BlackJackServiceFacadeImpl implements BlackJackServiceFacade {
         }
         catch (NoSuchElementException e) {
 
-            throw new GameNotFoundException("Card deck not found for id: " + anId);
+            throw new GameNotFoundException("Game not found for id: " + anId);
         }
 
     }
