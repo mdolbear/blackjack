@@ -1,6 +1,5 @@
 package com.oracle.blackjack.persistence;
 
-import com.oracle.blackjack.exceptions.CardDeckNotFoundException;
 import com.oracle.blackjack.exceptions.GameNotFoundException;
 import com.oracle.blackjack.gamemodel.BlackJackGame;
 import com.oracle.blackjack.gamemodel.PlayerState;
