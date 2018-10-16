@@ -102,3 +102,45 @@ Play a hand:
 
 Keep playing hands until the game terminates.
 
+#Display k8s dashboard. 
+
+This is an alternative to using kubectl: Instructions here: https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
+
+kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+
+kubectl proxy --port=8090
+
+Now bring up a browser and go to http://<master-ip>:<apiserver-port>/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+
+Example: http://localhost:8090/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+
+#Remote debug a container in k8s cluster:
+
+These changes are required in Dockerfile:
+
+EXPOSE 4000
+ENV JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,address=4000,suspend=n"
+
+
+These changes are required in my blackjack-service.yml:
+
+  - name: debug
+    port: 4000
+    protocol: TCP
+    targetPort: 4000
+    
+Now run
+
+kubectl describe services blackjack
+
+Under the response, pull out
+
+NodePort:                 debug  31539/TCP
+LoadBalancer Ingress:     localhost
+
+and set up debugger url to be 
+
+-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=31539
+
+in the Intellij or Eclipse debugger.
+

@@ -8,7 +8,8 @@ metadata:
     tier: backend
 spec:
   ports:
-  - port: 27017
+  - name: dburl
+    port: 27017
     targetPort: 27017
   selector:
     app: mongo

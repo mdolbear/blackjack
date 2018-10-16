@@ -9,11 +9,13 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 8080
+  - name: svcport
+    port: 8080
     targetPort: 8080
-  # Replace with the IP of your minikube node / master node
-  #externalIPs:
-  #- 192.168.65.0
+  - name: debug
+    port: 4000
+    protocol: TCP
+    targetPort: 4000
   selector:
     app: blackjack
     tier: backend
