@@ -144,3 +144,10 @@ and set up debugger url to be
 
 in the Intellij or Eclipse debugger.
 
+
+#To use Telepresence debugging with K8s: https://www.telepresence.io/
+
+telepresence --swap-deployment blackjack --expose 8080 \
+--run java -agentlib:jdwp=transport=dt_socket,server=y,address=4000,suspend=n -Dspring.profiles.active=prod -jar blackjack-1.0-SNAPSHOT.jar
+
+Then you can set local breakpoints on localhost:4000

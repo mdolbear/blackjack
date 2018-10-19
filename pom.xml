@@ -76,7 +76,7 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <repository>mjd-software/${project.artifactId}</repository>
+                            <repository>mdolbear/${project.artifactId}</repository>
                             <tag>${project.version}</tag>
                             <verbose>true</verbose>
                             <buildArgs>
