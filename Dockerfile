@@ -20,7 +20,7 @@ ARG JAR_FILE
 
 ADD ${JAR_FILE} blackjack-1.0-SNAPSHOT.jar
 
-EXPOSE 4000
+EXPOSE 4000 8000
 ENV JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,address=4000,suspend=n"
 
 ENTRYPOINT java $JAVA_OPTS $JAVA_ARGS -Dspring.profiles.active=prod -jar /blackjack-1.0-SNAPSHOT.jar
