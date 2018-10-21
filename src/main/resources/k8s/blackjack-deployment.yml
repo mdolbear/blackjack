@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: blackjack
-        image: mjd-software/blackjack:1.0-SNAPSHOT
+        image: mdolbear/blackjack:1.0-SNAPSHOT
         ports:
         - containerPort: 8080
   strategy:
