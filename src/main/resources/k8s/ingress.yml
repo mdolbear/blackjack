@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: blackjack-ingress
+#  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+#  labels:
+#    team: mjd-software
+spec:
+  rules:
+  - host: myblackjack.com
+    http:
+      paths:
+       - path: /
+         backend:
+          serviceName: blackjack
+          servicePort: 80
