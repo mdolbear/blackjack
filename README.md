@@ -18,6 +18,11 @@ To pull docker down to your local Docker:
 #This configuration supports a kubernetes cluster. Do the following to load the kubernetes cluster:
 
 cd ~
+Create k8s artifacts to add the ingress proxy back end service and ingress controller for nginx:
+
+```kubectl create -f code/blackjack/src/main/resources/k8s/igctl-default-backend-svc.yml```
+
+```kubectl create -f code/blackjack/src/main/resources/k8s/ingress-controller.yml```
 
 Create k8s artifacts for mongo:
 
@@ -30,8 +35,9 @@ Create k8s artifacts for mongo:
 ```kubectl create -f code/blackjack/src/main/resources/k8s/mongo-service.yml```
 
 
-
-After running the above, the url for mongo will be mongodb://mongo:27017/db
+After running the above, the url for mongo will be mongodb://mongo:27017/db. This should be the 
+url that is setup to connect to mongo in the application.yml file for the black jack service. It 
+should already be configured this way.
 
 Now the k8s for the blackjack service:
 
@@ -39,43 +45,28 @@ Now the k8s for the blackjack service:
 
 ```kubectl create -f code/blackjack/src/main/resources/k8s/blackjack-service.yml```
 
+Now to create the k8s for the ingress controller:
 
-Now the application will be available at http://LoadBalanceIngress:nodePort
+```kubectl create -f code/blackjack/src/main/resources/k8s/ingress.yml```
 
-Find LoadBalanceIngress:nodePort from the following commands
+
+At this point on the mac, you will need to add an entry in your /etc/hosts file like so:
+
+127.0.0.1       myblackjack.localhost
+
+You wil have found this entry by doing the following:
+
+kubectl get ingress
+
+Utilize the entry fro HOSTS.
 
 #Example:
 
-```kubectl get services```
+kubectl get ingress
 
-NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
-
-blackjack    NodePort    10.109.213.48   <none>        8080:31266/TCP   11m
-
-kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP          15m
-
-mongo        ClusterIP   10.108.68.55    <none>        27017/TCP        12m
-
-
-```kubectl describe services blackjack```
-
-Name:                     blackjack
-Namespace:                default
-Labels:                   app=blackjack
-                          tier=backend
-Annotations:              <none>
-Selector:                 app=blackjack,tier=backend
-Type:                     NodePort
-IP:                       10.109.213.48
-LoadBalancer Ingress:     localhost
-Port:                     <unset>  8080/TCP
-TargetPort:               8080/TCP
-NodePort:                 <unset>  31266/TCP
-Endpoints:                10.1.0.144:8080
-Session Affinity:         None
-External Traffic Policy:  Cluster
-Events:                   <none>
-
+us17mac00258:~ micdol$ kubectl get ingress
+NAME                HOSTS                   ADDRESS     PORTS     AGE
+blackjack-ingress   myblackjack.localhost   localhost   80        16m
 
 
 #Now play the game:
@@ -83,22 +74,22 @@ Events:                   <none>
 Play a game of black jack
 
 Create card deck:
-```curl -X POST http://localhost:31266/blackjack/createCardDeck```
+```curl -X POST http://myblackjack.localhost/blackjack/createCardDeck```
 cardDeckId=5bc271f860d9ea00090b9ed1
 
 
 Start a new game:
-```curl -d "numberOfPlayers=2" http://localhost:31266/blackjack/startgame```
+```curl -d "numberOfPlayers=2" http://myblackjack.localhost/blackjack/startgame```
 
 gameId=5bc2721a60d9ea00090b9ed4
 
 Get game state
 
-```curl http://localhost:31266/blackjack/gameState?gameId=5bc2721a60d9ea00090b9ed4```
+```curl http://myblackjack.localhost/blackjack/gameState?gameId=5bc2721a60d9ea00090b9ed4```
 
 Play a hand:
 
-```curl -d "cardDeckId=5bc271f860d9ea00090b9ed1&gameId=5bc2721a60d9ea00090b9ed4" -X PUT http://localhost:31266/blackjack/playHand```
+```curl -d "cardDeckId=5bc271f860d9ea00090b9ed1&gameId=5bc2721a60d9ea00090b9ed4" -X PUT http://myblackjack.localhost/blackjack/playHand```
 
 Keep playing hands until the game terminates.
 

@@ -12,6 +12,7 @@ spec:
   - name: svcport
     port: 8080
     targetPort: 8080
+#This would normally not be here, nor NodePort above, but I have left them for debug
   - name: debug
     port: 4000
     protocol: TCP
