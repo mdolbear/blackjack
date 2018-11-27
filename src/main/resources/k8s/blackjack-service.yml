@@ -6,6 +6,7 @@ metadata:
   labels:
     app: blackjack
     tier: backend
+    team: mjdsoft
 spec:
   type: NodePort
   ports:

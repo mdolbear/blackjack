@@ -13,6 +13,7 @@ spec:
       labels:
         app: blackjack
         tier: backend
+        team: mjdsoft
     spec:
       containers:
       - name: blackjack

@@ -142,3 +142,37 @@ telepresence --swap-deployment blackjack --expose 8080 \
 --run java -agentlib:jdwp=transport=dt_socket,server=y,address=4000,suspend=n -Dspring.profiles.active=prod -jar blackjack-1.0-SNAPSHOT.jar
 
 Then you can set local breakpoints on localhost:4000
+
+
+#To set up Prometheus monitoring:
+
+1) Set up both the pom dependencies for micrometer and prometheus (pom.xml), as well as the properties in the
+applcation.yml. 
+
+2) Once this has been completed, deploy the application to the K8s cluster and double-check that metrics are 
+appearing with the following via the ingress:
+
+curl http://myblackjack.localhost/actuator/prometheus
+
+3) Create and deploy prometheus inside of the k8s cluster:
+
+kubectl create namespace monitoring
+kubectl create -f code/blackjack/src/main/resources/k8s/prometheus/prom-config-map.yaml -n monitoring
+kubectl create -f code/blackjack/src/main/resources/k8s/prometheus/prom-deployment.yaml -n monitoring
+
+4) Start and access the ui via a port forward:
+kubectl get pods -n namespace
+
+NAME                                     READY     STATUS    RESTARTS   AGE
+prometheus-deployment-7c8fdf9b89-wsbx5   1/1       Running   0          6m
+
+$ kubectl port-forward prometheus-deployment-7c8fdf9b89-wsbx5 9090:9090 -n monitoring
+
+Now log into http://localhost:9090
+If you go to Status->Service Discovery
+and click on kubernetes-service-endpoints
+you should see target labels for the blackjack pod
+
+Now go to Status-> Targets you should see an endpoint in the state UP.
+
+If you now go to the graph page, you should be able to pick some jvm* metrics and graph them.
