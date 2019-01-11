@@ -4,6 +4,8 @@ a blackjack game (with some simplified rules because I have never played cards i
 contains two separate collections, and I am using application.properties to point to the mongo db. I didn't use
 the embedded mongo because I wanted get familiar with mongo and its tools.
 
+![](images/BlackJackGameModel.png)
+
 To build:
 
 mvn clean install -Pbuild-docker-image
@@ -15,39 +17,12 @@ To pull docker down to your local Docker:
 ```docker run -p 27017:27017 mongo```
 
 
-#This configuration supports a kubernetes cluster. Do the following to load the kubernetes cluster:
+#This configuration supports a kubernetes cluster. 
 
-cd ~
-Create k8s artifacts to add the ingress proxy back end service and ingress controller for nginx:
+Do the following to load the kubernetes cluster:
 
-```kubectl create -f code/blackjack/src/main/resources/k8s/igctl-default-backend-svc.yml```
-
-```kubectl create -f code/blackjack/src/main/resources/k8s/ingress-controller.yml```
-
-Create k8s artifacts for mongo:
-
-```kubectl create -f code/blackjack/src/main/resources/k8s/mongo-persistent-volume.yml```
-
-```kubectl create -f code/blackjack/src/main/resources/k8s/mongo-pv-claim.yml```
-
-```kubectl create -f code/blackjack/src/main/resources/k8s/mongo-deployment.yml```
-
-```kubectl create -f code/blackjack/src/main/resources/k8s/mongo-service.yml```
-
-
-After running the above, the url for mongo will be mongodb://mongo:27017/db. This should be the 
-url that is setup to connect to mongo in the application.yml file for the black jack service. It 
-should already be configured this way.
-
-Now the k8s for the blackjack service:
-
-```kubectl create -f code/blackjack/src/main/resources/k8s/blackjack-deployment.yml```
-
-```kubectl create -f code/blackjack/src/main/resources/k8s/blackjack-service.yml```
-
-Now to create the k8s for the ingress controller:
-
-```kubectl create -f code/blackjack/src/main/resources/k8s/ingress.yml```
+cd src/main/resources/k8s
+Now run ./constructCluster.sh
 
 
 At this point on the mac, you will need to add an entry in your /etc/hosts file like so:
@@ -146,21 +121,9 @@ Then you can set local breakpoints on localhost:4000
 
 #To set up Prometheus monitoring:
 
-1) Set up both the pom dependencies for micrometer and prometheus (pom.xml), as well as the properties in the
-applcation.yml. 
+Prometheus was created with the populating of the k8s cluster. Now
+start and access the ui via a port forward:
 
-2) Once this has been completed, deploy the application to the K8s cluster and double-check that metrics are 
-appearing with the following via the ingress:
-
-curl http://myblackjack.localhost/actuator/prometheus
-
-3) Create and deploy prometheus inside of the k8s cluster:
-
-kubectl create namespace monitoring
-kubectl create -f code/blackjack/src/main/resources/k8s/prometheus/prom-config-map.yaml -n monitoring
-kubectl create -f code/blackjack/src/main/resources/k8s/prometheus/prom-deployment.yaml -n monitoring
-
-4) Start and access the ui via a port forward:
 kubectl get pods -n namespace
 
 NAME                                     READY     STATUS    RESTARTS   AGE
@@ -176,3 +139,9 @@ you should see target labels for the blackjack pod
 Now go to Status-> Targets you should see an endpoint in the state UP.
 
 If you now go to the graph page, you should be able to pick some jvm* metrics and graph them.
+
+#Swagger Documentation
+
+I've added swagger documentation for this example:
+
+```http://myblackjack.localhost/swagger-ui.html```
