@@ -2,6 +2,9 @@ package com.oracle.blackjack.gamemodel;
 
 import com.oracle.blackjack.gamemodel.deck.Card;
 import com.oracle.blackjack.gamemodel.deck.CardIdentifier;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,10 +14,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class CardPointAssignment {
 
+    @Getter(AccessLevel.PRIVATE) @Setter(AccessLevel.PRIVATE)
     @Id
     private String id;
+
+    @Getter(AccessLevel.PRIVATE) @Setter(AccessLevel.PRIVATE)
     private CardIdentifier cardIdentifier;
 
+    @Getter() @Setter(AccessLevel.PRIVATE)
     private int[]   possiblePointValues;
 
     /**
@@ -48,42 +55,5 @@ public class CardPointAssignment {
                 this.getCardIdentifier().equals(aCard.getCardType());
 
     }
-
-    /**
-     * Answer my possiblePointValues
-     *
-     * @return int[]
-     */
-    protected int[] getPossiblePointValues() {
-        return possiblePointValues;
-    }
-
-    /**
-     * Answer my cardIdentifier
-     *
-     * @return com.oracle.blackjack.gamemodel.deck.CardIdentifier
-     */
-    public CardIdentifier getCardIdentifier() {
-        return cardIdentifier;
-    }
-
-    /**
-     * Set my cardIdentifier
-     *
-     * @param cardIdentifier com.oracle.blackjack.gamemodel.deck.CardIdentifier
-     */
-    public void setCardIdentifier(CardIdentifier cardIdentifier) {
-        this.cardIdentifier = cardIdentifier;
-    }
-
-    /**
-     * Set my possiblePointValues
-     *
-     * @param possiblePointValues int[]
-     */
-    protected void setPossiblePointValues(int[] possiblePointValues) {
-        this.possiblePointValues = possiblePointValues;
-    }
-
 
 }

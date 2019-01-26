@@ -2,6 +2,9 @@ package com.oracle.blackjack.gamemodel;
 
 import com.oracle.blackjack.gamemodel.deck.Card;
 import com.oracle.blackjack.gamemodel.deck.CardDeck;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,14 +21,20 @@ import java.util.stream.Collectors;
 @Document(collection="gameCollection")
 public class BlackJackGame implements Serializable {
 
+    @Getter()
     @Id
     private String id;
 
+    @Getter() @Setter(AccessLevel.PRIVATE)
     private List<Player> players;
-    private BlackJackGameEvaluator gameEvaluator;
-    private BlackJackCardPointAssigner pointAssigner;
-    private int currentPlayerIndex;
 
+    @Getter() @Setter(AccessLevel.PRIVATE)
+    private BlackJackGameEvaluator gameEvaluator;
+
+    @Getter(AccessLevel.PRIVATE) @Setter(AccessLevel.PRIVATE)
+    private BlackJackCardPointAssigner pointAssigner;
+
+    @Getter() @Setter(AccessLevel.PROTECTED)
     @Indexed
     private GameState state;
 
@@ -51,89 +60,6 @@ public class BlackJackGame implements Serializable {
         this.getPlayers().add(aPlayer);
     }
 
-    /**
-     * Remove aPlayer from me
-     * @param aPlayer Player
-     */
-    public void removePlayer(Player aPlayer) {
-
-        this.getPlayers().remove(aPlayer);
-    }
-
-
-    /**
-     * Answer my players
-     *
-     * @return java.util.List<com.oracle.blackjack.gamemodel.Player>
-     */
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    /**
-     * Set my players
-     *
-     * @param players java.util.List<com.oracle.blackjack.gamemodel.Player>
-     */
-    protected void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
-    /**
-     * Answer my id
-     *
-     * @return java.lang.String
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Set my id
-     *
-     * @param id java.lang.String
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
-
-
-    /**
-     * Answer my gameEvaluator
-     *
-     * @return com.oracle.blackjack.gamemodel.BlackJackGameEvaluator
-     */
-    protected BlackJackGameEvaluator getGameEvaluator() {
-        return gameEvaluator;
-    }
-
-    /**
-     * Set my gameEvaluator
-     *
-     * @param gameEvaluator com.oracle.blackjack.gamemodel.BlackJackGameEvaluator
-     */
-    protected void setGameEvaluator(BlackJackGameEvaluator gameEvaluator) {
-        this.gameEvaluator = gameEvaluator;
-    }
-
-    /**
-     * Answer my pointAssigner
-     *
-     * @return com.oracle.blackjack.gamemodel.BlackJackCardPointAssigner
-     */
-    protected BlackJackCardPointAssigner getPointAssigner() {
-        return pointAssigner;
-    }
-
-
-    /**
-     * Set my pointAssigner
-     *
-     * @param pointAssigner com.oracle.blackjack.gamemodel.BlackJackCardPointAssigner
-     */
-    protected void setPointAssigner(BlackJackCardPointAssigner pointAssigner) {
-        this.pointAssigner = pointAssigner;
-    }
 
 
     /**
@@ -149,59 +75,6 @@ public class BlackJackGame implements Serializable {
 
 
     /**
-     * Answer my state
-     *
-     * @return com.oracle.blackjack.gamemodel.GameState
-     */
-    public GameState getState() {
-        return state;
-    }
-
-    /**
-     * Set my state
-     *
-     * @param state com.oracle.blackjack.gamemodel.GameState
-     */
-    protected void setState(GameState state) {
-        this.state = state;
-    }
-
-    /**
-     * Increment player index
-     * @return int
-     */
-    protected int incrementPlayerIndex() {
-
-        int tempIndex;
-
-        tempIndex = this.getCurrentPlayerIndex();
-        tempIndex = (tempIndex + 1) % this.getPlayers().size();
-        this.setCurrentPlayerIndex(tempIndex);
-
-        return tempIndex;
-
-    }
-
-
-    /**
-     * Answer my currentPlayerIndex
-     *
-     * @return int
-     */
-    protected int getCurrentPlayerIndex() {
-        return currentPlayerIndex;
-    }
-
-    /**
-     * Set my currentPlayerIndex
-     *
-     * @param currentPlayerIndex int
-     */
-    protected void setCurrentPlayerIndex(int currentPlayerIndex) {
-        this.currentPlayerIndex = currentPlayerIndex;
-    }
-
-    /**
      * Start game with aNumberOfPlayers
      * @param aNumberOfPlayers int
      */
@@ -209,7 +82,6 @@ public class BlackJackGame implements Serializable {
 
         this.validateNoPlayersExist();
         this.createPlayers(aNumberOfPlayers);
-        this.setCurrentPlayerIndex(0);
     }
 
     /**
@@ -228,7 +100,6 @@ public class BlackJackGame implements Serializable {
         this.validateActiveGameState();
 
         //Initialization
-        this.setCurrentPlayerIndex(0);
         tempCurrentPlayerIndex = 0;
 
         //Iterate over active players
@@ -245,7 +116,6 @@ public class BlackJackGame implements Serializable {
             tempStates.add(tempCurrentPlayer.getState());
 
             tempCurrentPlayerIndex++;
-            this.setCurrentPlayerIndex(tempCurrentPlayerIndex);
 
         }
 
@@ -263,7 +133,7 @@ public class BlackJackGame implements Serializable {
      * @param aCard Card
      * @return int
      */
-    protected int assignPointsFor(Card aCard, Player aPlayer) {
+    public int assignPointsFor(Card aCard, Player aPlayer) {
 
         return this.getPointAssigner().assignPointsFor(aCard, aPlayer);
 
@@ -272,7 +142,7 @@ public class BlackJackGame implements Serializable {
      * Create players
      * @param aNumberOfPlayers int
      */
-    protected void createPlayers(int aNumberOfPlayers) {
+    private void createPlayers(int aNumberOfPlayers) {
 
         Player  tempPlayer;
 
@@ -286,7 +156,7 @@ public class BlackJackGame implements Serializable {
     /**
      * Validate no players exist
      */
-    protected void validateNoPlayersExist() {
+    private void validateNoPlayersExist() {
 
         if (this.getPlayers().size() != 0) {
 
@@ -298,7 +168,7 @@ public class BlackJackGame implements Serializable {
     /**
      * Validate no players exist
      */
-    protected void validatePlayersExist() {
+    private void validatePlayersExist() {
 
         if (this.getPlayers().size() == 0) {
 
@@ -310,7 +180,7 @@ public class BlackJackGame implements Serializable {
     /**
      * Validate active game state
      */
-    protected void validateActiveGameState() {
+    private void validateActiveGameState() {
 
         if (!this.isActive()) {
 
@@ -322,7 +192,7 @@ public class BlackJackGame implements Serializable {
      * Answer whether or not I am active
      * @return boolean
      */
-    protected boolean isActive() {
+    private boolean isActive() {
 
         return this.getState() != null &&
                 this.getState().equals(GameState.ACTIVE);
@@ -344,7 +214,7 @@ public class BlackJackGame implements Serializable {
      * Answer my player to player state mapping function
      * @return Function<Player, PlayerState>
      */
-    protected Function<Player, PlayerState> getPlayerToPlayerStateMappingFunction() {
+    private Function<Player, PlayerState> getPlayerToPlayerStateMappingFunction() {
         return (Player p) -> p.getState();
     }
 
@@ -363,7 +233,7 @@ public class BlackJackGame implements Serializable {
      * Answer my player to player id mapping function
      * @return Function<Player, String>
      */
-    protected Function<Player, String> getPlayerToPlayerIdMappingFunction() {
+    private Function<Player, String> getPlayerToPlayerIdMappingFunction() {
         return (Player p) -> p.getId();
     }
 
@@ -384,7 +254,7 @@ public class BlackJackGame implements Serializable {
      * Answer my player to player id mapping function
      * @return Function<Player, Integer>
      */
-    protected Function<Player, Integer> getPlayerToPlayerPointsMappingFunction() {
+    private Function<Player, Integer> getPlayerToPlayerPointsMappingFunction() {
         return (Player p) -> new Integer(p.getCurrentHandPoints());
     }
 

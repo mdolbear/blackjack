@@ -1,6 +1,9 @@
 package com.oracle.blackjack.gamemodel;
 
 import com.oracle.blackjack.gamemodel.deck.Card;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -15,11 +18,14 @@ import java.util.List;
 @Document(collection="gameCollection")
 public class Player {
 
+    @Getter() @Setter(AccessLevel.PRIVATE)
     @Id
     private String id;
 
+    @Getter() @Setter(AccessLevel.PRIVATE)
     private List<PlayedCard> cards;
 
+    @Getter() @Setter(AccessLevel.PRIVATE)
     @Indexed
     private PlayerState state;
 
@@ -61,7 +67,7 @@ public class Player {
     /**
      * Validate still playing
      */
-    protected void validateStillPlaying() {
+    private void validateStillPlaying() {
 
         if (!this.isStillPlaying()) {
 
@@ -73,7 +79,7 @@ public class Player {
     /**
      * Determine state
      */
-    protected void determineNextState() {
+    private void determineNextState() {
 
         if (this.getCurrentHandPoints() > BlackJackCardPointAssigner.MAXIMUM_NUMBER_OF_POINTS) {
 
@@ -94,38 +100,11 @@ public class Player {
      * Add aPlayedCard
      * @param aPlayedCard PlayedCard
      */
-    protected void addPlayedCard(PlayedCard aPlayedCard) {
+    private void addPlayedCard(PlayedCard aPlayedCard) {
 
         this.getCards().add(aPlayedCard);
     }
 
-
-    /**
-     * Answer my cards
-     *
-     * @return java.util.List<com.oracle.blackjack.gamemodel.PlayedCard>
-     */
-    public List<PlayedCard> getCards() {
-        return cards;
-    }
-
-    /**
-     * Set my cards
-     *
-     * @param cards java.util.List<com.oracle.blackjack.gamemodel.PlayedCard>
-     */
-    protected void setCards(List<PlayedCard> cards) {
-        this.cards = cards;
-    }
-
-    /**
-     * Answer my state
-     *
-     * @return com.oracle.blackjack.gamemodel.PlayerState
-     */
-    public PlayerState getState() {
-        return state;
-    }
 
     /**
      * Answer whether I am still playing
@@ -135,17 +114,6 @@ public class Player {
 
         return this.getState() != null &&
                     this.getState().equals(PlayerState.PLAYING);
-
-    }
-
-    /**
-     * Answer whether or not I am out
-     * @return boolean
-     */
-    public boolean isOut() {
-
-        return this.getState() != null &&
-                    this.getState().equals(PlayerState.LOST);
 
     }
 
@@ -160,33 +128,6 @@ public class Player {
 
     }
 
-
-    /**
-     * Set my state
-     *
-     * @param state com.oracle.blackjack.gamemodel.PlayerState
-     */
-    public void setState(PlayerState state) {
-        this.state = state;
-    }
-
-    /**
-     * Answer my id
-     *
-     * @return java.lang.String
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Set my id
-     *
-     * @param id java.lang.String
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
 
 
     /**
@@ -204,4 +145,5 @@ public class Player {
 
         return tempResult;
     }
+
 }

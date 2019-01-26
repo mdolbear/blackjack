@@ -1,5 +1,8 @@
 package com.oracle.blackjack.gamemodel.deck;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
@@ -11,13 +14,16 @@ import java.util.Objects;
  *
  */
 @Document(collection="cardCollection")
-//@CompoundIndex(def="{'cardType':1, 'suit': 1", name="cardCompoundIndex")
 public class Card {
 
+    @Getter() @Setter(AccessLevel.PRIVATE)
     @Id
     private String id;
 
+    @Getter() @Setter(AccessLevel.PRIVATE)
     private CardIdentifier cardType;
+
+    @Getter() @Setter(AccessLevel.PRIVATE)
     private Suit suit;
 
     /**
@@ -41,60 +47,6 @@ public class Card {
         this.setSuit(aSuit);
         this.setCardType(anIdentifier);
 
-    }
-
-    /**
-     * Answer my id
-     *
-     * @return java.lang.String
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Set my id
-     *
-     * @param id java.lang.String
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    /**
-     * Answer my cardType
-     *
-     * @return com.oracle.blackjack.gamemodel.deck.CardIdentifier
-     */
-    public CardIdentifier getCardType() {
-        return cardType;
-    }
-
-    /**
-     * Set my cardType
-     *
-     * @param cardType com.oracle.blackjack.gamemodel.deck.CardIdentifier
-     */
-    protected void setCardType(CardIdentifier cardType) {
-        this.cardType = cardType;
-    }
-
-    /**
-     * Answer my suit
-     *
-     * @return com.oracle.blackjack.gamemodel.deck.Suit
-     */
-    public Suit getSuit() {
-        return suit;
-    }
-
-    /**
-     * Set my suit
-     *
-     * @param suit com.oracle.blackjack.gamemodel.deck.Suit
-     */
-    protected void setSuit(Suit suit) {
-        this.suit = suit;
     }
 
 

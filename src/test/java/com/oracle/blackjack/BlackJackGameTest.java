@@ -1,6 +1,6 @@
 package com.oracle.blackjack;
+
 import com.oracle.blackjack.gamemodel.BlackJackGame;
-import com.oracle.blackjack.gamemodel.GameState;
 import com.oracle.blackjack.gamemodel.Player;
 import com.oracle.blackjack.gamemodel.PlayerState;
 import com.oracle.blackjack.gamemodel.deck.CardDeck;

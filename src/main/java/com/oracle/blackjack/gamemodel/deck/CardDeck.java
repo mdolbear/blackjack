@@ -1,6 +1,9 @@
 package com.oracle.blackjack.gamemodel.deck;
 
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,10 +15,14 @@ import java.util.*;
 @Document(collection="cardCollection")
 public class CardDeck {
 
+    @Getter() @Setter(AccessLevel.PRIVATE)
     @Id
     private String id;
 
+    @Getter() @Setter(AccessLevel.PRIVATE)
     private List<Card> availableCards;
+
+    @Getter() @Setter(AccessLevel.PRIVATE)
     private List<Card> playedCards;
 
 
@@ -89,7 +96,7 @@ public class CardDeck {
      * Answer a shuffled card
      * @return Card
      */
-    protected Card getShuffledCard() {
+    private Card getShuffledCard() {
 
         Card                tempCard;
         List<Card>          tempShuffle;
@@ -104,7 +111,7 @@ public class CardDeck {
     /**
      * Validate available cards
      */
-    protected void validateAvailableCards() {
+    private void validateAvailableCards() {
 
         if (this.getAvailableCards().isEmpty()) {
 
@@ -113,30 +120,12 @@ public class CardDeck {
     }
 
 
-    /**
-     * Answer my id
-     *
-     * @return java.lang.String
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Set my id
-     *
-     * @param id java.lang.String
-     */
-    protected void setId(String id) {
-        this.id = id;
-    }
-
 
     /**
      * Add a Available card to me
      * @param aCard Card
      */
-    protected void addAvailableCard(Card aCard) {
+    private void addAvailableCard(Card aCard) {
 
         this.getAvailableCards().add(aCard);
     }
@@ -145,65 +134,20 @@ public class CardDeck {
      * Remove Available aCard from me
      * @param aCard Card
      */
-    protected void removeAvailableCard(Card aCard) {
+    private void removeAvailableCard(Card aCard) {
 
         this.getAvailableCards().remove(aCard);
     }
 
 
-    /**
-     * Answer my available cards
-     *
-     * @return java.util.List<com.oracle.blackjack.gamemodel.deck.Card>
-     */
-    public List<Card> getAvailableCards() {
-        return availableCards;
-    }
-
-    /**
-     * Set my available cards
-     *
-     * @param cards java.util.List<com.oracle.blackjack.gamemodel.deck.Card>
-     */
-    protected void setAvailableCards(List<Card> cards) {
-        this.availableCards = cards;
-    }
 
     /**
      * Add a Played card to me
      * @param aCard Card
      */
-    protected void addPlayedCard(Card aCard) {
+    private void addPlayedCard(Card aCard) {
 
         this.getPlayedCards().add(aCard);
-    }
-
-    /**
-     * Remove Played aCard from me
-     * @param aCard Card
-     */
-    protected void removePlayedCard(Card aCard) {
-
-        this.getPlayedCards().remove(aCard);
-    }
-
-
-    /**
-     * Answer my playedCards
-     *
-     * @return java.util.List<com.oracle.blackjack.gamemodel.deck.Card>
-     */
-    public List<Card> getPlayedCards() {
-        return playedCards;
-    }
-
-    /**
-     * Set my playedCards
-     *
-     * @param playedCards java.util.List<com.oracle.blackjack.gamemodel.deck.Card>
-     */
-    protected void setPlayedCards(List<Card> playedCards) {
-        this.playedCards = playedCards;
     }
 
 

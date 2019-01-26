@@ -2,12 +2,15 @@ package com.oracle.blackjack.gamemodel;
 
 import com.oracle.blackjack.gamemodel.deck.Card;
 import com.oracle.blackjack.gamemodel.deck.CardIdentifier;
-import org.springframework.data.annotation.Id;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -15,7 +18,7 @@ import java.util.List;
 @Document(collection="gameCollection")
 public class BlackJackCardPointAssigner {
 
-
+    @Getter(AccessLevel.PRIVATE) @Setter(AccessLevel.PRIVATE)
     private List<CardPointAssignment> pointAssignments;
 
     //Constants
@@ -29,25 +32,6 @@ public class BlackJackCardPointAssigner {
 
         super();
         this.intializePointAssignments();
-    }
-
-
-    /**
-     * Answer my pointAssignments
-     *
-     * @return java.util.List<com.oracle.blackjack.gamemodel.CardPointAssignment>
-     */
-    public List<CardPointAssignment> getPointAssignments() {
-        return pointAssignments;
-    }
-
-    /**
-     * Set my pointAssignments
-     *
-     * @param pointAssignments java.util.List<com.oracle.blackjack.gamemodel.CardPointAssignment>
-     */
-    public void setPointAssignments(List<CardPointAssignment> pointAssignments) {
-        this.pointAssignments = pointAssignments;
     }
 
 
@@ -137,19 +121,18 @@ public class BlackJackCardPointAssigner {
      */
     protected CardPointAssignment getCardPointAssignment(Card aCard) {
 
-        CardPointAssignment                 tempResult = null;
-        Iterator<CardPointAssignment>       tempItr;
-        CardPointAssignment                 tempCurrent;
+        Optional<CardPointAssignment> tempOpt;
+        CardPointAssignment           tempResult = null;
 
 
-        tempItr = this.getPointAssignments().iterator();
-        while (tempItr.hasNext() && tempResult == null) {
+        tempOpt =  this.getPointAssignments()
+                   .stream()
+                   .filter((anAssignment -> anAssignment.isPointAssignmentFor(aCard)))
+                   .findFirst();
 
-            tempCurrent = tempItr.next();
-            if (tempCurrent.isPointAssignmentFor(aCard)) {
+        if (tempOpt.isPresent()) {
 
-                tempResult = tempCurrent;
-            }
+            tempResult = tempOpt.get();
         }
 
         return tempResult;
