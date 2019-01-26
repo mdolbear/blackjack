@@ -3,6 +3,7 @@ package com.oracle.blackjack.gamemodel;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Iterator;
+import java.util.Optional;
 
 /**
  *
@@ -45,23 +46,16 @@ public class BlackJackGameEvaluator {
      * Answer whether there are any winning players
      * @param aGame BlackJackGame
      */
-    protected boolean areAnyWinningPlayers(BlackJackGame aGame) {
+    private boolean areAnyWinningPlayers(BlackJackGame aGame) {
 
-        Iterator<Player> tempPlayers;
-        Player           tempCurrent;
-        Player           tempResult = null;
+        Optional<Player> tempOpt;
 
-        tempPlayers = aGame.getPlayers().iterator();
-        while (tempResult == null &&
-                tempPlayers.hasNext()) {
 
-            tempCurrent = tempPlayers.next();
-            if (tempCurrent.isWinner()) {
-                tempResult = tempCurrent;
-            }
-        }
+        tempOpt = aGame.getPlayers().stream()
+                                    .filter((aPlayer) -> aPlayer.isWinner())
+                                    .findFirst();
 
-        return tempResult != null;
+        return tempOpt.isPresent();
 
     }
 
@@ -69,23 +63,16 @@ public class BlackJackGameEvaluator {
      * Answer whether there are any remaining active players
      * @param aGame BlackJackGame
      */
-    protected boolean areAnyRemainingActivePlayers(BlackJackGame aGame) {
+    private boolean areAnyRemainingActivePlayers(BlackJackGame aGame) {
 
-        Iterator<Player> tempPlayers;
-        Player           tempCurrent;
-        Player           tempResult = null;
+        Optional<Player> tempOpt;
 
-        tempPlayers = aGame.getPlayers().iterator();
-        while (tempResult == null &&
-                    tempPlayers.hasNext()) {
+        tempOpt = aGame.getPlayers().stream()
+                                    .filter((aPlayer) -> aPlayer.isStillPlaying())
+                                    .findFirst();
 
-            tempCurrent = tempPlayers.next();
-            if (tempCurrent.isStillPlaying()) {
-                tempResult = tempCurrent;
-            }
-        }
+        return tempOpt.isPresent();
 
-        return tempResult != null;
 
     }
 
